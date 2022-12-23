@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "motor_driver.h": "c",
+        "inttypes.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}

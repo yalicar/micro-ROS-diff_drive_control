@@ -161,5 +161,3 @@ float* GetEncoderData(void)
     // return array
     return vel;
 }
-
-
