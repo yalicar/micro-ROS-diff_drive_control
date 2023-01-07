@@ -17,7 +17,7 @@
 #include "freertos/task.h"
 #endif
 // Constants
-#define FRAME_TIME 200 // 1000 / FRAME_TIME = FPS
+//#define FRAME_TIME 200 // 1000 / FRAME_TIME = FPS
 #define SLEEP_TIME 10
 // Pi Constants
 #define PI 3.14159265358979323846

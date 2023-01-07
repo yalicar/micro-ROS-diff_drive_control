@@ -25,14 +25,14 @@
 // import quaternion message
 #include <std_msgs/msg/header.h>
 
-#include <driver/gpio.h>
+#include <driver/gpio.h> // import gpio driver 
 #include <driver/ledc.h>
 #include "driver/i2c.h"
 #ifdef ESP_PLATFORM
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #endif
-
+// include motor driver and encoder files 
 #include "motor_driver.c"
 #include "encoder.c"
 #include "imu.c"
@@ -61,7 +61,7 @@ sensor_msgs__msg__MagneticField mag_msg; // Message type MagneticField for publi
 
 //----------------------------------------------Function forward declarations------------------------------------------------
 // import SetupMotor function from motor_driver.c
-void publish_wheel_odom(float linear_vel, float angular_vel); // Publish odometry message from encoder
+void publish_wheel_odom(); // Publish odometry message from encoder
 void publish_imu_raw(); // Publish imu data
 void publish_mag_raw(); // Publish magnetometer data
 void setupRos(); // Setup ROS
@@ -162,7 +162,7 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     // SetMotorSpeed Function
     SetMotorSpeed(linear, angular);
     // Get encoder data from encoder that return linear velocity and angular velocity array float[2]
-    publish_wheel_odom(GetEncoderData()[0], GetEncoderData()[1]);
+    publish_wheel_odom();
     // call normalize function
     normalize();
     // publish imu data
@@ -172,12 +172,13 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     }
     
 // Publish odometry from encoder
-void publish_wheel_odom(float linear_vel, float angular_vel)
-{
+void publish_wheel_odom()
+{   
+    
     // calculate odometry using trapezoidal integration method 
-    x = x + linear_vel*cos(theta)*FRAME_TIME/1000; // calculate x position in m
-    y = y + linear_vel*sin(theta)*FRAME_TIME/1000; // calculate y position in m
-    theta = theta + angular_vel*FRAME_TIME/1000; // calculate theta in rad
+    x = x + linear_velocity_enc*cos(theta)*FRAME_TIME/1000; // calculate x position in m
+    y = y + linear_velocity_enc*sin(theta)*FRAME_TIME/1000; // calculate y position in m
+    theta = theta + angular_velocity_enc*FRAME_TIME/1000; // calculate theta in rad
     // publish odometry data to ROS
     //get current time for header timestamp field in microROS message 
     odom_msg.header.frame_id.data = "odom";
@@ -193,16 +194,18 @@ void publish_wheel_odom(float linear_vel, float angular_vel)
     odom_msg.pose.pose.orientation.y = 0.0; // y orientation
     odom_msg.pose.pose.orientation.z = sin(theta/2); // z orientation
     odom_msg.pose.pose.orientation.w = cos(theta/2); // w orientation
-    // set the linear velocity
-    odom_msg.twist.twist.linear.x = linear_velocity;
+    // set the linear velocity from cmd_vel topic
+    odom_msg.twist.twist.linear.x =  linear_velocity_enc;
     odom_msg.twist.twist.linear.y = 0.0;
     odom_msg.twist.twist.linear.z = 0.0;
     // set the angular velocity
     odom_msg.twist.twist.angular.x = 0.0;
     odom_msg.twist.twist.angular.y = 0.0;
-    odom_msg.twist.twist.angular.z = angular_velocity;
+    odom_msg.twist.twist.angular.z = angular_velocity_enc;
     // publish odometry message
     RCSOFTCHECK(rcl_publish(&publisher, (const void*)&odom_msg, NULL));
+        // get encoder data 
+    GetEncoderData();
 }
 // Publish mpu data raw to ROS
 void publish_imu_raw()

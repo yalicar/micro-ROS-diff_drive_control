@@ -58,8 +58,8 @@ volatile float encoder_right_speed = 0;
 // wheel base
 #define WHEEL_BASE 0.13 // m
 // linear and angular velocity
-volatile float linear_velocity = 0.0;
-volatile float angular_velocity = 0.0;
+volatile float linear_velocity_enc = 0.0;
+volatile float angular_velocity_enc = 0.0;
 
 //----------------------------------------------Encoder------------------------------------------------
 // encoder interrupt service routine for left encoder
@@ -153,11 +153,11 @@ float* GetEncoderData(void)
     encoder_left_count = 0;
     encoder_right_count = 0;
     // calculate linear and angular velocity
-    linear_velocity = (encoder_right_speed + encoder_left_speed)/2; // linear velocity in m/s
-    angular_velocity = (encoder_right_speed - encoder_left_speed)/(WHEEL_BASE); // angular velocity in rad/s
+    linear_velocity_enc = (encoder_right_speed + encoder_left_speed)/2; 
+    angular_velocity_enc = (encoder_right_speed - encoder_left_speed)/(WHEEL_BASE); // angular velocity in rad/s
     // save linear and angular velocity in array
-    vel[0] = linear_velocity;
-    vel[1] = angular_velocity;
+    vel[0] = linear_velocity_enc;
+    vel[1] = angular_velocity_enc;
     // return array
     return vel;
 }
