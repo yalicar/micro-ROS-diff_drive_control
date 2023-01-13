@@ -187,15 +187,15 @@ void publish_wheel_odom()
     odom_msg.header.stamp.nanosec = (uint32_t) (esp_timer_get_time() % 1000000) * 1000;
     // set the position
     odom_msg.pose.pose.position.x = x; // x position
-    odom_msg.pose.pose.position.y = y; // y position
+    odom_msg.pose.pose.position.y = 0.0; // y position
     odom_msg.pose.pose.position.z = 0.0; // z position
     // set the orientation
     odom_msg.pose.pose.orientation.x = 0.0; // x orientation
     odom_msg.pose.pose.orientation.y = 0.0; // y orientation
-    odom_msg.pose.pose.orientation.z = sin(theta/2); // z orientation
-    odom_msg.pose.pose.orientation.w = cos(theta/2); // w orientation
+    odom_msg.pose.pose.orientation.z = 0.0; // z orientation
+    odom_msg.pose.pose.orientation.w = 1.0; // w orientation
     // set the linear velocity from cmd_vel topic
-    odom_msg.twist.twist.linear.x =  linear_velocity_enc;
+    odom_msg.twist.twist.linear.x = linear_velocity_enc;
     odom_msg.twist.twist.linear.y = 0.0;
     odom_msg.twist.twist.linear.z = 0.0;
     // set the angular velocity
