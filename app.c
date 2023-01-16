@@ -72,7 +72,7 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time);
 // Main
 void appMain(void *arg) {
     SetupMotor(); // Setup pins for motor driver
-    SetupEncoder(); // Setup pins for encoder
+    EncoderInit(); // Setup pins for encoder
     SetupImu(); // Setup pins for imu
     setupRos(); // Setup ROS
 }
@@ -174,11 +174,12 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
 // Publish odometry from encoder
 void publish_wheel_odom()
 {   
-    
+    // Get velocity from encoder
+    GetVelocity();
     // calculate odometry using trapezoidal integration method 
-    x = x + linear_velocity_enc*cos(theta)*FRAME_TIME/1000; // calculate x position in m
-    y = y + linear_velocity_enc*sin(theta)*FRAME_TIME/1000; // calculate y position in m
-    theta = theta + angular_velocity_enc*FRAME_TIME/1000; // calculate theta in rad
+    x = x + velocity_enc.linear*cos(theta)*FRAME_TIME/1000; // calculate x position in m
+    y = y + velocity_enc.linear*sin(theta)*FRAME_TIME/1000; // calculate y position in m
+    theta = theta + velocity_enc.angular*FRAME_TIME/1000; // calculate theta in rad
     // publish odometry data to ROS
     //get current time for header timestamp field in microROS message 
     odom_msg.header.frame_id.data = "odom";
@@ -187,7 +188,7 @@ void publish_wheel_odom()
     odom_msg.header.stamp.nanosec = (uint32_t) (esp_timer_get_time() % 1000000) * 1000;
     // set the position
     odom_msg.pose.pose.position.x = x; // x position
-    odom_msg.pose.pose.position.y = 0.0; // y position
+    odom_msg.pose.pose.position.y = y; // y position
     odom_msg.pose.pose.position.z = 0.0; // z position
     // set the orientation
     odom_msg.pose.pose.orientation.x = 0.0; // x orientation
@@ -195,17 +196,15 @@ void publish_wheel_odom()
     odom_msg.pose.pose.orientation.z = 0.0; // z orientation
     odom_msg.pose.pose.orientation.w = 1.0; // w orientation
     // set the linear velocity from cmd_vel topic
-    odom_msg.twist.twist.linear.x = linear_velocity_enc;
+    odom_msg.twist.twist.linear.x = velocity_enc.linear;
     odom_msg.twist.twist.linear.y = 0.0;
     odom_msg.twist.twist.linear.z = 0.0;
     // set the angular velocity
     odom_msg.twist.twist.angular.x = 0.0;
     odom_msg.twist.twist.angular.y = 0.0;
-    odom_msg.twist.twist.angular.z = angular_velocity_enc;
+    odom_msg.twist.twist.angular.z = velocity_enc.angular;
     // publish odometry message
     RCSOFTCHECK(rcl_publish(&publisher, (const void*)&odom_msg, NULL));
-        // get encoder data 
-    GetEncoderData();
 }
 // Publish mpu data raw to ROS
 void publish_imu_raw()

@@ -1,7 +1,3 @@
-
-#ifndef ENCODER_H // include guard to prevent multiple definitions of the same thing (in this case, the class) 
-#define ENCODER_H // if the macro ENCODER_H is not defined, define it now
-
 // include the Arduino standard library
 #include <stdio.h>
 #include <unistd.h>
@@ -17,13 +13,10 @@
 #include "freertos/task.h"
 #endif
 
-
-// Encoder gpio pins 34
+// Encoder gpio pins
 #define ENCODER_A_PIN 34
 #define ENCODER_B_PIN 35
 #define ENCODER_resolution 12
-volatile int32_t encoder_left_count = 0;
-volatile int32_t encoder_right_count = 0;
 // Pi Constants
 #define PI 3.14159265358979323846
 #define FRAME_TIME 100 // 1000 / FRAME_TIME = FPS
@@ -38,31 +31,46 @@ volatile int32_t encoder_right_count = 0;
 #define PWM_RESOLUTION LEDC_TIMER_12_BIT
 #define PWM_TIMER LEDC_TIMER_1
 #define PWM_MODE LEDC_HIGH_SPEED_MODE
-
-// encoder state
-volatile int8_t encoder_left_state = 0;
-volatile int8_t encoder_right_state = 0;
-volatile int8_t encoder_left_state_last = 0;
-volatile int8_t encoder_right_state_last = 0;
-// timer 
-volatile uint32_t encoder_left_time = 0;
-volatile uint32_t encoder_left_time_last = 0;
-volatile uint32_t encoder_left_dt = 0;
-volatile uint32_t encoder_right_time = 0;
-volatile uint32_t encoder_right_time_last = 0;
-volatile uint32_t encoder_right_dt = 0;
-// direction of rotation
-volatile int8_t left_direction = 0;
-volatile int8_t right_direction = 0;
 // number of pulses per revolution
 #define ENCODER_PPR 40
-// encoder speed
-volatile float encoder_left_speed = 0;
-volatile float encoder_right_speed = 0;
 // wheel radius
 #define WHEEL_RADIUS 0.0325 // m
 // wheel base
 #define WHEEL_BASE 0.13 // m
-// linear and angular velocity
-volatile float linear_velocity_enc = 0.0;
-volatile float angular_velocity_enc = 0.0;
+
+// Struct for encoder speed
+typedef struct {
+  float left;
+  float right;
+} encoder_speed;
+// struct for encoder count
+typedef struct {
+  int32_t left;
+  int32_t right;
+} encoder_count;
+// struct for linear and angular velocity
+typedef struct {
+  float linear;
+  float angular;
+} velocity_enc;
+// struct for direction of rotation
+typedef struct {
+  int8_t left;
+  int8_t right;
+} direction;
+// struct for encoder state 
+typedef struct {
+  int8_t left;
+  int8_t right;
+  int8_t left_last;
+  int8_t right_last;
+} encoder_state;
+
+// encoder interrupt service routine for left encoder
+void IRAM_ATTR encoder_left_isr_handler(void *arg);
+// encoder interrupt service routine for right encoder
+void IRAM_ATTR encoder_right_isr_handler(void *arg);
+// encoder initialization
+void EncoderInit(void);
+// function to get linear and angular velocity
+void GetVelocity(void);
