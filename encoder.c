@@ -44,7 +44,7 @@ void encoder_right_init(void)
     gpio_install_isr_service(0); 
     gpio_isr_handler_add(ENCODER_B_PIN, encoder_right_isr_handler, (void*) ENCODER_B_PIN); // attach the interrupt service routine
 }
-void EncoderInit(void)
+void EncoderInit(void)//
 {
     encoder_left_init();
     encoder_right_init();
