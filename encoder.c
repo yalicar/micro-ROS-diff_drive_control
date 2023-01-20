@@ -35,8 +35,7 @@ void InitEncoder(encoder_setup_t encoder_setup)
 }
 
 // encoder_left_isr_handler function (interrupt service routine)
-void IRAM_ATTR encoder_left_isr_handler(void* arg)
-{
+void IRAM_ATTR encoder_left_isr_handler(void* arg) {
     encoder_state.left = gpio_get_level(encoder_setup.PIN_A);
     // count encoder pulses from left encoder
     if (encoder_state.left != encoder_state.left_last)
@@ -48,8 +47,7 @@ void IRAM_ATTR encoder_left_isr_handler(void* arg)
 }
 
 // encoder_right_isr_handler function (interrupt service routine)
-void IRAM_ATTR encoder_right_isr_handler(void* arg)
-{
+void IRAM_ATTR encoder_right_isr_handler(void* arg) {
     encoder_state.right = gpio_get_level(encoder_setup.PIN_B);
     // count encoder pulses from right encoder
     if (encoder_state.right != encoder_state.right_last)
@@ -67,37 +65,37 @@ void encoder_count_reset(encoder_count_t* encoder_count)
     encoder_count->right = 0;
 }
 
-/*
 // encoder_direction function
-void encoder_direction_(encoder_state_t* encoder_state, encoder_setup_t* encoder_setup, encoder_direction_t* encoder_direction)
+void encoder_direction_()
 {
     // left encoder
-    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup->left_forward) > 0)
+    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.left_forward) > 0)
     {
-        encoder_state->left = 1;
+        encoder_state.left = 1;
     }
-    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup->left_backward) > 0)
+    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.left_backward) > 0)
     {
-        encoder_state->left = -1;
+        encoder_state.left = -1;
     }
     else
     {
-        encoder_state->left = 0;
+        encoder_state.left = 0;
     }
     // right encoder
-    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup->right_forward) > 0)
+    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.right_forward) > 0)
     {
-        encoder_state->right = 1;
+        encoder_state.right = 1;
     }
-    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup->right_backward) > 0)
+    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.right_backward) > 0)
     {
-        encoder_state->right = -1;
+        encoder_state.right = -1;
     }
     else
     {
-        encoder_state->right = 0;
+        encoder_state.right = 0;
     }
 }
+/*
 // encoder speed function
 void encoder_speed_(encoder_count_t* encoder_count, encoder_direction_t* encoder_direction, encoder_speed_t* encoder_speed, encoder_setup_t* encoder_setup)
 {

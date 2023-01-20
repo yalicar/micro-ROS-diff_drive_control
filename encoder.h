@@ -71,8 +71,8 @@ void InitEncoder(encoder_setup_t encoder_setup);
 void IRAM_ATTR encoder_left_isr_handler(void* arg);
 void IRAM_ATTR encoder_right_isr_handler(void* arg);
 void encoder_count_reset(encoder_count_t* encoder_count);
+void encoder_direction_();
 /*
-void encoder_direction_(encoder_state_t *encoder_state, encoder_setup_t *encoder_setup, encoder_direction_t *encoder_direction);
 void encoder_speed_(encoder_count_t *encoder_count, encoder_direction_t *encoder_direction, encoder_speed_t *encoder_speed, encoder_setup_t *encoder_setup);
 void encoder_velocity_(encoder_speed_t *encoder_speed, encoder_velocity_t *encoder_velocity, encoder_setup_t *encoder_setup);
 void encoder_position_(encoder_velocity_t *encoder_velocity, encoder_position_t *encoder_position, encoder_setup_t *encoder_setup);
