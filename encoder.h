@@ -68,8 +68,8 @@ typedef struct {
 
 // define function prototypes with pointer arguments
 void InitEncoder(encoder_setup_t encoder_setup);
-void IRAM_ATTR encoder_left_isr_handler(void* arg);
-void IRAM_ATTR encoder_right_isr_handler(void* arg);
+void IRAM_ATTR encoder_left_isr_handler();
+void IRAM_ATTR encoder_right_isr_handler();
 void encoder_count_reset(encoder_count_t* encoder_count);
 void encoder_direction_();
 /*

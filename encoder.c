@@ -34,7 +34,7 @@ void InitEncoder(encoder_setup_t encoder_setup) {
 }
 
 // encoder_left_isr_handler function (interrupt service routine)
-void IRAM_ATTR encoder_left_isr_handler(void* arg) {
+void IRAM_ATTR encoder_left_isr_handler() {
     encoder_state.left = gpio_get_level(encoder_setup.PIN_A);
     // count encoder pulses from left encoder
     if (encoder_state.left != encoder_state.left_last)
@@ -46,7 +46,7 @@ void IRAM_ATTR encoder_left_isr_handler(void* arg) {
 }
 
 // encoder_right_isr_handler function (interrupt service routine)
-void IRAM_ATTR encoder_right_isr_handler(void* arg) {
+void IRAM_ATTR encoder_right_isr_handler() {
     encoder_state.right = gpio_get_level(encoder_setup.PIN_B);
     // count encoder pulses from right encoder
     if (encoder_state.right != encoder_state.right_last)
