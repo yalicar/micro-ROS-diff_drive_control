@@ -13,8 +13,7 @@ encoder_count_t encoder_count = {
 };
 encoder_setup_t encoder_setup;  
 // encoder_init function
-void InitEncoder(encoder_setup_t encoder_setup)
-{
+void InitEncoder(encoder_setup_t encoder_setup) {
     encoder_setup = encoder_setup;
     // define encoder pins
     gpio_pad_select_gpio(encoder_setup.PIN_A); // select gpio
@@ -64,7 +63,7 @@ void encoder_count_reset(encoder_count_t* encoder_count)
     encoder_count->left = 0;
     encoder_count->right = 0;
 }
-
+/*
 // encoder_direction function
 void encoder_direction_()
 {
@@ -95,7 +94,7 @@ void encoder_direction_()
         encoder_state.right = 0;
     }
 }
-/*
+
 // encoder speed function
 void encoder_speed_(encoder_count_t* encoder_count, encoder_direction_t* encoder_direction, encoder_speed_t* encoder_speed, encoder_setup_t* encoder_setup)
 {
