@@ -6,6 +6,7 @@
 // include motor driver and encoder files
 #include "ros.h"
 #include "motor_driver.h"
+#include "encoder.h"
 //#include "encoder.h"
 //#include "imu.c"
 
@@ -27,12 +28,22 @@ motor_setup_t motor_setup = {
     .PWM_MOTOR_MIN = 750,
     .PWM_MOTOR_MAX = 2500
 };
- 
+
+encoder_setup_t encoder_setup = {
+    .PIN_A = 34,
+    .PIN_B = 35,
+    .RESOLUTION = 12,
+    .PULSES_PER_REV = 40,
+    .WHEEL_DIAMETER = 0.065,
+    .WHEEL_BASE = 0.13
+};
 //----------------------------------------------Function forward declarations------------------------------------------------
 // Main
 void appMain(void *arg) {
     // Initialize motor driver
     InitMotorDriver(motor_setup);
+    // Initialize encoder
+    InitEncoder(encoder_setup);
     // Setup ROS
-    setupRos(motor_setup); // Setup ROS
+    setupRos(); // Setup ROS
 }

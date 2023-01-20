@@ -29,4 +29,4 @@ float angular;
 /*Function prototypes*/
 float fmap(float val, float in_min, float in_max, float out_min, float out_max);
 void InitMotorDriver(motor_setup_t motor_setup);
-void SetMotorSpeed(motor_setup_t motor_setup, float linear, float angular);
+void SetMotorSpeed(float linear, float angular);

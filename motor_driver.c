@@ -19,8 +19,11 @@
 #include "freertos/task.h"
 #endif
 
+motor_setup_t motor_setup;
+
 //Function to initialize the motor driver
 void InitMotorDriver(motor_setup_t motor_setup) {
+    motor_setup = motor_setup;
     // Led. Set it to GPIO_MODE_INPUT_OUTPUT, because we want to read back the state we set it to.
     gpio_reset_pin(motor_setup.LED_BUILTIN);
     gpio_set_direction(motor_setup.LED_BUILTIN, GPIO_MODE_INPUT_OUTPUT); // Set the pin as output
@@ -78,7 +81,7 @@ void InitMotorDriver(motor_setup_t motor_setup) {
 }
 
 // Set motor speed function (linear and angular) from cmd_vel topic (geometry_msgs/Twist)
-void SetMotorSpeed(motor_setup_t motor_setup, float linear, float angular) {
+void SetMotorSpeed(float linear, float angular) {
     // Convert the linear and angular speeds to left and right speeds
     float left_speed = (linear - angular) / 2.0f;
     float right_speed = (linear + angular) / 2.0f;

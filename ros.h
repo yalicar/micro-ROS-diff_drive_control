@@ -54,7 +54,7 @@ sensor_msgs__msg__Imu imu_msg; // Message type Imu for publish imu data
 sensor_msgs__msg__MagneticField mag_msg; // Message type MagneticField for publish magnetometer data
 
 // import SetupMotor function from motor_driver.c
-void setupRos(motor_setup_t motor_setup); // Setup ROS
+void setupRos(); // Setup ROS
 void cmd_vel_callback(const void *msgin); // Callback function for subscriber cmd_vel topic 
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time); // Callback function for timer
 

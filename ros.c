@@ -4,7 +4,6 @@
 // Author: Yalmar Cardenas
 // Date: 2022-12-15
 
-motor_setup_t motor_setup;
 
 // We don't really need the callback, because msg is set anyway
 void cmd_vel_callback(const void *msgin) {
@@ -12,26 +11,22 @@ void cmd_vel_callback(const void *msgin) {
 
 // Each frame, check msg data and set PWM channels accordingly
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
-    // Toggle LED to show that the program is running properly
-    /*
-    gpio_set_level(motor_setup.LED_BUILTIN, !gpio_get_level(motor_setup.LED_BUILTIN));
-    */
+
     if (timer == NULL) {
         return;
     }
     // Use linear.x for forward value and angular.z for rotation from cmd_vel topic
     float linear = constrain(msg.linear.x, -1, 1);
     float angular = constrain(msg.angular.z, -1, 1);
-    // print x value
-    // Block for call function to diferent sensors driver
+
     // Function to set motor speed and direction
-    SetMotorSpeed(motor_setup, linear, angular);
+    SetMotorSpeed(linear, angular);
+    
     }
 
 // ROS setup
-void setupRos(motor_setup_t motor_setup) {
+void setupRos() {
     // Micro ROS
-    motor_setup = motor_setup;
     rcl_allocator_t allocator = rcl_get_default_allocator();
     rclc_support_t support;
     // create init_options
