@@ -34,10 +34,11 @@ encoder_setup_t encoder_setup = {
     .PIN_B = 35,
     .RESOLUTION = 12,
     .PULSES_PER_REV = 40,
+    .FRAME_TIME_MS = FRAME_TIME,
     .WHEEL_DIAMETER = 0.065,
     .WHEEL_BASE = 0.13
 };
-//----------------------------------------------Function forward declarations------------------------------------------------
+//----------------------------------------------Function declarations------------------------------------------------
 // Main
 void appMain(void *arg) {
     // Initialize motor driver

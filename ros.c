@@ -1,5 +1,6 @@
 #include "ros.h"
 #include "motor_driver.h"
+#include "encoder.h"
 
 // Author: Yalmar Cardenas
 // Date: 2022-12-15
@@ -21,6 +22,7 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
 
     // Function to set motor speed and direction
     SetMotorSpeed(linear, angular);
+    PublishWheelOdom();
     
     }
 
@@ -42,13 +44,14 @@ void setupRos() {
         ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
         "/cmd_vel"));
 
-    /*
     // create publisher to publish odometry from encoder
     RCCHECK(rclc_publisher_init_default(
         &publisher,
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(nav_msgs, msg, Odometry),
         "/wheel/odometry"));
+
+    /*
     // create publisher to publish imu data
     RCCHECK(rclc_publisher_init_default(
         &publisher_imu,
@@ -84,9 +87,8 @@ void setupRos() {
 
     // free resources
     RCCHECK(rcl_subscription_fini(&subscriber, &node));
-
-    /*
     RCCHECK(rcl_publisher_fini(&publisher, &node))
+    /*
     RCCHECK(rcl_publisher_fini(&publisher_imu, &node))
     RCCHECK(rcl_publisher_fini(&publisher_mag, &node))
     RCCHECK(rcl_node_fini(&node));
@@ -95,23 +97,12 @@ void setupRos() {
     vTaskDelete(NULL);
 }
 
-/*
 // wheel odometry publisher
-void publish_wheel_odom()
+void PublishWheelOdom()
 {   
     // get encoder data
-    encoder_position_t encoder_position;
-    encoder_velocity_t encoder_velocity;
-    encoder_count_t encoder_count;
-    encoder_state_t encoder_state;
-    encoder_setup_t encoder_setup;
-    encoder_direction_t encoder_direction;
-    encoder_speed_t encoder_speed;
-       
-    
-    encoder_main(&encoder_position, &encoder_velocity, &encoder_count, &encoder_state,
-                &encoder_setup, &encoder_direction, &encoder_speed);
-
+    GetEncoder();
+    // get current time for header timestamp field in microROS message
     odom_msg.header.frame_id.data = "odom";
     odom_msg.child_frame_id.data = "base_link";
     odom_msg.header.stamp.sec = (uint32_t) (esp_timer_get_time() / 1000000);
@@ -136,6 +127,8 @@ void publish_wheel_odom()
     // publish odometry message
     RCSOFTCHECK(rcl_publish(&publisher, (const void*)&odom_msg, NULL));
 }
+
+/*
 // Publish mpu data raw to ROS
 void publish_imu_raw()
 {

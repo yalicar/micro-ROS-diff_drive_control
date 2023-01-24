@@ -4,6 +4,7 @@
 #pragma once
 
 #include "motor_driver.h"
+#include "encoder.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -42,6 +43,9 @@
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Aborting.\n",__LINE__,(int)temp_rc);vTaskDelete(NULL);}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Continuing.\n",__LINE__,(int)temp_rc);}}
 
+// define extern variables
+extern encoder_position_t encoder_position;
+extern encoder_velocity_t encoder_velocity;
 
 rcl_publisher_t publisher; // Publisher to publish odometry message from encoder
 rcl_publisher_t publisher_twist; // Publisher to publish twist message
@@ -57,5 +61,6 @@ sensor_msgs__msg__MagneticField mag_msg; // Message type MagneticField for publi
 void setupRos(); // Setup ROS
 void cmd_vel_callback(const void *msgin); // Callback function for subscriber cmd_vel topic 
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time); // Callback function for timer
+void PublishWheelOdom(); // Publish odometry message from encoder
 
 

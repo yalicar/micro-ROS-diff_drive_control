@@ -1,6 +1,6 @@
 #include "encoder.h"
 
-// Global variables struct for encoder state with pointers
+// Global variables struct for encoder initialization
 encoder_state_t encoder_state = {
     .left = 0,
     .left_last = 0,
@@ -11,7 +11,29 @@ encoder_count_t encoder_count = {
     .left = 0,
     .right = 0
 };
-encoder_setup_t encoder_setup;  
+encoder_setup_t encoder_setup;
+
+encoder_direction_t encoder_direction = {
+    .left = 0,
+    .right = 0
+};
+encoder_speed_t encoder_speed = {
+    .left = 0,
+    .right = 0
+};
+encoder_velocity_t encoder_velocity = {
+    .linear = 0,
+    .angular = 0
+};
+encoder_position_t encoder_position = {
+    .x = 1,
+    .y = 0,
+    .theta = 0,
+    .x_last = 0,
+    .y_last = 0,
+    .theta_last = 0
+};
+
 // encoder_init function
 void InitEncoder(encoder_setup_t encoder_setup) {
     encoder_setup = encoder_setup;
@@ -63,79 +85,77 @@ void encoder_count_reset(encoder_count_t* encoder_count)
     encoder_count->left = 0;
     encoder_count->right = 0;
 }
-/*
+
 // encoder_direction function
-void encoder_direction_()
+void encoder_direction_(encoder_direction_t* encoder_direction)
 {
-    // left encoder
-    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.left_forward) > 0)
+    // left encoder direction
+    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, motor_setup.PWM_LEFT_FORWARD) > 0)
     {
-        encoder_state.left = 1;
+        encoder_direction->left = 1;
     }
-    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.left_backward) > 0)
+    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, motor_setup.PWM_LEFT_BACKWARD) > 0)
     {
-        encoder_state.left = -1;
-    }
-    else
-    {
-        encoder_state.left = 0;
-    }
-    // right encoder
-    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.right_forward) > 0)
-    {
-        encoder_state.right = 1;
-    }
-    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, encoder_setup.right_backward) > 0)
-    {
-        encoder_state.right = -1;
+        encoder_direction->left = -1;
     }
     else
     {
-        encoder_state.right = 0;
+        encoder_direction->left = 0;
+    }
+    // right encoder direction
+    if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, motor_setup.PWM_RIGHT_FORWARD) > 0)
+    {
+        encoder_direction->right = 1;
+    }
+    else if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, motor_setup.PWM_RIGHT_BACKWARD) > 0)
+    {
+        encoder_direction->right = -1;
+    }
+    else
+    {
+        encoder_direction->right = 0;
     }
 }
 
 // encoder speed function
-void encoder_speed_(encoder_count_t* encoder_count, encoder_direction_t* encoder_direction, encoder_speed_t* encoder_speed, encoder_setup_t* encoder_setup)
+void encoder_speed_(encoder_speed_t* encoder_speed)
 {
     // left encoder speed calculation (rpm)
-    encoder_speed->left = (encoder_count->left * encoder_direction->left * 60) / (encoder_setup->ppr * encoder_setup->resolution * encoder_setup->FRAME_TIME);
+    encoder_speed->left = (encoder_count.left * encoder_direction.left * 60) / (encoder_setup.PULSES_PER_REV * encoder_setup.RESOLUTION * encoder_setup.FRAME_TIME_MS);
     // right encoder speed calculation (rpm)
-    encoder_speed->right = (encoder_count->right * encoder_direction->right * 60) / (encoder_setup->ppr * encoder_setup->resolution * encoder_setup->FRAME_TIME);
-}
-// encoder velocity function
-void encoder_velocity_(encoder_speed_t* encoder_speed, encoder_velocity_t* encoder_velocity, encoder_setup_t* encoder_setup)
-{
-    // linear velocity calculation (m/s)
-    encoder_velocity->linear = (encoder_speed->left + encoder_speed->right) * (PI * encoder_setup->wheel_diameter) / (2 * 60);
-    // angular velocity calculation (rad/s)
-    encoder_velocity->angular = (encoder_speed->right - encoder_speed->left) * (PI * encoder_setup->wheel_diameter) / (encoder_setup->wheel_base * 60);
-}
-// encoder position function
-void encoder_position_(encoder_velocity_t* encoder_velocity, encoder_position_t* encoder_position, encoder_setup_t* encoder_setup)
-{
-   // x position calculation (m)
-    encoder_position->x = encoder_position->x + encoder_velocity->linear * cos(encoder_position->theta) * encoder_setup->FRAME_TIME;
-    // y position calculation (m)
-    encoder_position->y = encoder_position->y + encoder_velocity->linear * sin(encoder_position->theta) * encoder_setup->FRAME_TIME;
-    // theta position calculation (rad)
-    encoder_position->theta = encoder_position->theta + encoder_velocity->angular * encoder_setup->FRAME_TIME;
+    encoder_speed->right = (encoder_count.right * encoder_direction.right * 60) / (encoder_setup.PULSES_PER_REV * encoder_setup.RESOLUTION * encoder_setup.FRAME_TIME_MS);
 }
 
+// encoder velocity function
+void encoder_velocity_(encoder_velocity_t* encoder_velocity)
+{
+    // linear velocity calculation (m/s)
+    encoder_velocity->linear = (encoder_speed.left + encoder_speed.right) * (PI * encoder_setup.WHEEL_DIAMETER) / (2 * 60);
+    // angular velocity calculation (rad/s)
+    encoder_velocity->angular = (encoder_speed.right - encoder_speed.left) * (PI * encoder_setup.WHEEL_DIAMETER) / (encoder_setup.WHEEL_BASE * 60);
+}
+
+// encoder position function
+void encoder_position_(encoder_position_t* encoder_position)
+{
+   // x position calculation (m)
+    encoder_position->x = encoder_position->x + encoder_velocity.linear * cos(encoder_position->theta) * encoder_setup.FRAME_TIME_MS;
+    // y position calculation (m)
+    encoder_position->y = encoder_position->y + encoder_velocity.linear * sin(encoder_position->theta) * encoder_setup.FRAME_TIME_MS;
+    // theta position calculation (rad)
+    encoder_position->theta = encoder_position->theta + encoder_velocity.angular * encoder_setup.FRAME_TIME_MS;
+}
 // main function
-void encoder_main(encoder_position_t* encoder_position, encoder_velocity_t* encoder_velocity,encoder_count_t* encoder_count,
-                    encoder_state_t* encoder_state,encoder_setup_t* encoder_setup,encoder_direction_t* encoder_direction,
-                    encoder_speed_t* encoder_speed)
+void GetEncoder()
 {
     // reset encoder count
-    encoder_count_reset(encoder_count);
-    // set encoder direction
-    encoder_direction_(encoder_state, encoder_setup, encoder_direction);
-    // calculate encoder speed
-    encoder_speed_(encoder_count, encoder_direction, encoder_speed, encoder_setup);
-    // calculate encoder velocity
-    encoder_velocity_(encoder_speed, encoder_velocity, encoder_setup);
-    // calculate encoder position
-    encoder_position_(encoder_velocity, encoder_position, encoder_setup);
+    encoder_count_reset(&encoder_count);
+    // get encoder direction
+    encoder_direction_(&encoder_direction);
+    // get encoder speed
+    encoder_speed_(&encoder_speed);
+    // get encoder velocity
+    encoder_velocity_(&encoder_velocity);
+    // get encoder position
+    encoder_position_(&encoder_position);
 }
-*/

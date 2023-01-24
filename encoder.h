@@ -15,11 +15,21 @@
 #include "freertos/task.h"
 #endif
 
+#include <nav_msgs/msg/odometry.h>
+#include <std_msgs/msg/header.h>
+#include <rcl/rcl.h>
+#include <rcl/error_handling.h>
+#include <rclc/rclc.h>
+#include <rclc/executor.h>
+
+#include "motor_driver.h"
+
 typedef struct {
   int PIN_A;
   int PIN_B;
   int RESOLUTION;
   int PULSES_PER_REV;
+  int FRAME_TIME_MS;
   float WHEEL_DIAMETER;
   float WHEEL_BASE;
 } encoder_setup_t;
@@ -65,20 +75,16 @@ typedef struct {
   float y_last;
   float theta_last;
 } encoder_position_t;
+// define extern variables for motor driver
+extern motor_setup_t motor_setup;
 
 // define function prototypes with pointer arguments
 void InitEncoder(encoder_setup_t encoder_setup);
 void IRAM_ATTR encoder_left_isr_handler();
 void IRAM_ATTR encoder_right_isr_handler();
 void encoder_count_reset(encoder_count_t* encoder_count);
-void encoder_direction_();
-/*
-void encoder_speed_(encoder_count_t *encoder_count, encoder_direction_t *encoder_direction, encoder_speed_t *encoder_speed, encoder_setup_t *encoder_setup);
-void encoder_velocity_(encoder_speed_t *encoder_speed, encoder_velocity_t *encoder_velocity, encoder_setup_t *encoder_setup);
-void encoder_position_(encoder_velocity_t *encoder_velocity, encoder_position_t *encoder_position, encoder_setup_t *encoder_setup);
-// define main function
-void encoder_main(encoder_position_t* encoder_position, encoder_velocity_t* encoder_velocity,encoder_count_t* encoder_count,
-                    encoder_state_t* encoder_state,encoder_setup_t* encoder_setup,encoder_direction_t* encoder_direction,
-                    encoder_speed_t* encoder_speed);
-                
-*/
+void encoder_direction_(encoder_direction_t* encoder_direction);
+void encoder_speed_(encoder_speed_t* encoder_speed);
+void encoder_velocity_(encoder_velocity_t* encoder_velocity);
+void encoder_position_(encoder_position_t* encoder_position);
+void GetEncoder();
