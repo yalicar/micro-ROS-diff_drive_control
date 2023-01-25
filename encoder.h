@@ -79,12 +79,12 @@ typedef struct {
 extern motor_setup_t motor_setup;
 
 // define function prototypes with pointer arguments
-void InitEncoder(encoder_setup_t encoder_setup);
 void IRAM_ATTR encoder_left_isr_handler();
 void IRAM_ATTR encoder_right_isr_handler();
-void encoder_count_reset(encoder_count_t* encoder_count);
-void encoder_direction_(encoder_direction_t* encoder_direction);
-void encoder_speed_(encoder_speed_t* encoder_speed);
-void encoder_velocity_(encoder_velocity_t* encoder_velocity);
-void encoder_position_(encoder_position_t* encoder_position);
+void InitEncoder(encoder_setup_t encoder_setup);
+void encoder_count_reset();
+void encoder_direction_();
+void encoder_speed_();
+void encoder_velocity_();
+void encoder_position_();
 void GetEncoder();
