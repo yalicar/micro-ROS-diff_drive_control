@@ -46,6 +46,7 @@
 // define extern variables
 extern encoder_position_t encoder_position;
 extern encoder_velocity_t encoder_velocity;
+extern encoder_count_t encoder_count;
 
 rcl_publisher_t publisher; // Publisher to publish odometry message from encoder
 rcl_publisher_t publisher_twist; // Publisher to publish twist message

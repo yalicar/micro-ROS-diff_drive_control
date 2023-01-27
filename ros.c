@@ -118,7 +118,7 @@ void PublishWheelOdom()
     // set the linear velocity from cmd_vel topic
     odom_msg.twist.twist.linear.x = encoder_velocity.linear;
     odom_msg.twist.twist.linear.y = 0.0;
-    odom_msg.twist.twist.linear.z = encoder_velocity.angular;
+    odom_msg.twist.twist.linear.z = encoder_count.left;
     // publish odometry message
     RCSOFTCHECK(rcl_publish(&publisher, (const void*)&odom_msg, NULL));
     // get encoder data

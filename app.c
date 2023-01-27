@@ -26,7 +26,7 @@ motor_setup_t motor_setup = {
     .PWM_TIMER = LEDC_TIMER_1,
     .PWM_MODE = LEDC_HIGH_SPEED_MODE,
     .PWM_MOTOR_MIN = 750,
-    .PWM_MOTOR_MAX = 2500
+    .PWM_MOTOR_MAX = 4095
 };
 
 encoder_setup_t encoder_setup = {

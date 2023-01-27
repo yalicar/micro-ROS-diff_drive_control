@@ -25,9 +25,11 @@ motor_setup_t motor_setup;
 void InitMotorDriver(motor_setup_t motor_setup) {
     motor_setup = motor_setup;
     // Led. Set it to GPIO_MODE_INPUT_OUTPUT, because we want to read back the state we set it to.
+    /*
     gpio_reset_pin(motor_setup.LED_BUILTIN);
     gpio_set_direction(motor_setup.LED_BUILTIN, GPIO_MODE_INPUT_OUTPUT); // Set the pin as output
     gpio_set_level(motor_setup.LED_BUILTIN, !gpio_get_level(motor_setup.LED_BUILTIN));
+    */
 
     // Configure timer
     ledc_timer_config_t ledc_timer = {

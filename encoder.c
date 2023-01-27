@@ -26,7 +26,7 @@ encoder_velocity_t encoder_velocity = {
     .angular = 0
 };
 encoder_position_t encoder_position = {
-    .x = 1,
+    .x = 0,
     .y = 0,
     .theta = 0,
     .x_last = 0,
@@ -107,7 +107,7 @@ void encoder_direction_()
     }
     else
     {
-        encoder_direction.left = 1;
+        encoder_direction.left = 0;
     }
     // right encoder direction
     if (ledc_get_duty(LEDC_HIGH_SPEED_MODE, motor_setup.PWM_RIGHT_FORWARD) > 0)
@@ -120,7 +120,7 @@ void encoder_direction_()
     }
     else
     {
-        encoder_direction.right = 1;
+        encoder_direction.right = 0;
     }
 }
 
@@ -159,10 +159,10 @@ void GetEncoder()
     encoder_direction_();
     // get encoder speed
     encoder_speed_();
-    // reset encoder count
-    //encoder_count_reset(encoder_count);
     // get encoder velocity
     encoder_velocity_();
     // get encoder position
     encoder_position_();
+    // reset encoder count
+    encoder_count_reset();
 }
