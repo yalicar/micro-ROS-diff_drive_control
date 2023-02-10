@@ -117,7 +117,7 @@ void PublishWheelOdom()
     odom_msg.pose.pose.orientation.w = 1.0; // w orientation
     // set the linear velocity from cmd_vel topic
     odom_msg.twist.twist.linear.x = encoder_velocity.linear;
-    odom_msg.twist.twist.linear.y = encoder_speed.left;
+    odom_msg.twist.twist.linear.y = 0.0;
     odom_msg.twist.twist.linear.z = encoder_velocity.angular;
     // covariance matrix
     

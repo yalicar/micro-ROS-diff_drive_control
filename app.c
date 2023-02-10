@@ -38,6 +38,7 @@ encoder_setup_t encoder_setup = {
     .WHEEL_DIAMETER = 0.065, // wheel diameter (m)
     .WHEEL_BASE = 0.25 // wheel base (m)
 };
+
 //----------------------------------------------Function declarations------------------------------------------------
 // Main
 void appMain(void *arg) {

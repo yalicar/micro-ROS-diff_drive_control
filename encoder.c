@@ -139,7 +139,6 @@ void encoder_velocity_()
     encoder_velocity.linear = (encoder_speed.left + encoder_speed.right) * (PI * encoder_setup.WHEEL_DIAMETER) / (2 * 60);
     // angular velocity calculation (rad/s)
     encoder_velocity.angular = (encoder_speed.right - encoder_speed.left) * (PI * encoder_setup.WHEEL_DIAMETER) / (encoder_setup.WHEEL_BASE * 60);
-
 }
 
 // encoder position function
