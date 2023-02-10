@@ -33,10 +33,10 @@ encoder_setup_t encoder_setup = {
     .PIN_A = 34,
     .PIN_B = 35,
     .RESOLUTION = 12,
-    .PULSES_PER_REV = 40,
-    .FRAME_TIME_MS = FRAME_TIME,
-    .WHEEL_DIAMETER = 0.065,
-    .WHEEL_BASE = 0.13
+    .PULSES_PER_REV = 60, // 60 pulses per revolution
+    .FRAME_TIME_MS = FRAME_TIME, // time between encoder readings (ms)
+    .WHEEL_DIAMETER = 0.065, // wheel diameter (m)
+    .WHEEL_BASE = 0.25 // wheel base (m)
 };
 //----------------------------------------------Function declarations------------------------------------------------
 // Main

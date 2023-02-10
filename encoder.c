@@ -145,12 +145,12 @@ void encoder_velocity_()
 // encoder position function
 void encoder_position_()
 {
-   // x position calculation (m)
-    encoder_position.x = encoder_position.x + encoder_velocity.linear * cos(encoder_position.theta) * encoder_setup.FRAME_TIME_MS;
+    // x position calculation (m)
+    encoder_position.x = encoder_position.x + encoder_velocity.linear * cos(encoder_position.theta) * encoder_setup.FRAME_TIME_MS/1000;
     // y position calculation (m)
-    encoder_position.y = encoder_position.y + encoder_velocity.linear * sin(encoder_position.theta) * encoder_setup.FRAME_TIME_MS;
-    // theta position calculation (rad)
-    encoder_position.theta = encoder_position.theta + encoder_velocity.angular * encoder_setup.FRAME_TIME_MS;
+    encoder_position.y = encoder_position.y + encoder_velocity.linear * sin(encoder_position.theta) * encoder_setup.FRAME_TIME_MS/1000;
+    // theta position calculation (rad) frame time in ms
+    encoder_position.theta = encoder_position.theta + encoder_velocity.angular * encoder_setup.FRAME_TIME_MS/1000;
 }
 // main function
 void GetEncoder()
