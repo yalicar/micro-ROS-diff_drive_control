@@ -25,11 +25,8 @@ motor_setup_t motor_setup;
 void InitMotorDriver(motor_setup_t motor_setup) {
     motor_setup = motor_setup;
     // Led. Set it to GPIO_MODE_INPUT_OUTPUT, because we want to read back the state we set it to.
-    /*
     gpio_reset_pin(motor_setup.LED_BUILTIN);
     gpio_set_direction(motor_setup.LED_BUILTIN, GPIO_MODE_INPUT_OUTPUT); // Set the pin as output
-    gpio_set_level(motor_setup.LED_BUILTIN, !gpio_get_level(motor_setup.LED_BUILTIN));
-    */
 
     // Configure timer
     ledc_timer_config_t ledc_timer = {
@@ -85,13 +82,13 @@ void InitMotorDriver(motor_setup_t motor_setup) {
 // Set motor speed function (linear and angular) from cmd_vel topic (geometry_msgs/Twist)
 void SetMotorSpeed(float linear, float angular) {
     // Convert the linear and angular speeds to left and right speeds
-    float left_speed = (linear - angular) / 2.0f;
-    float right_speed = (linear + angular) / 2.0f;
+    float left_speed = (linear - angular) / 2.0f; // left_speed = linear - angular / 2 (Diff Drive Robot)
+    float right_speed = (linear + angular) / 2.0f; // right_speed = linear + angular / 2 (Diff Drive Robot)
     // Map the speed to the PWM range
     uint16_t left_pwm = (uint16_t) fmap(fabs(left_speed), 0.0, 1.0, motor_setup.PWM_MOTOR_MIN, motor_setup.PWM_MOTOR_MAX);
     uint16_t right_pwm = (uint16_t) fmap(fabs(right_speed), 0.0, 1.0, motor_setup.PWM_MOTOR_MIN, motor_setup.PWM_MOTOR_MAX);
     // Set the direction
-    ledc_set_duty(motor_setup.PWM_MODE, motor_setup.PWM_LEFT_FORWARD, left_pwm * (left_speed > 0));
+    ledc_set_duty(motor_setup.PWM_MODE, motor_setup.PWM_LEFT_FORWARD, left_pwm * (left_speed > 0)); 
     ledc_set_duty(motor_setup.PWM_MODE, motor_setup.PWM_LEFT_BACKWARD, left_pwm * (left_speed < 0));
     ledc_set_duty(motor_setup.PWM_MODE, motor_setup.PWM_RIGHT_FORWARD, right_pwm * (right_speed > 0));
     ledc_set_duty(motor_setup.PWM_MODE, motor_setup.PWM_RIGHT_BACKWARD, right_pwm * (right_speed < 0));
@@ -100,6 +97,10 @@ void SetMotorSpeed(float linear, float angular) {
     ledc_update_duty(motor_setup.PWM_MODE, motor_setup.PWM_LEFT_BACKWARD);
     ledc_update_duty(motor_setup.PWM_MODE, motor_setup.PWM_RIGHT_FORWARD);
     ledc_update_duty(motor_setup.PWM_MODE, motor_setup.PWM_RIGHT_BACKWARD);
+    // get direction
+    //int dir = (left_speed > 0) ? 1 : -1;
+
+
 }
 
 // fmap function

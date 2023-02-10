@@ -36,7 +36,8 @@
 #include <std_msgs/msg/header.h>
 
 // define constants
-#define FRAME_TIME 100 // 10 Hz
+#
+#define FRAME_TIME 100 // 10ms
 //int FRAME_TIME = 100; // 100ms
 //---------------------------------------------Macro functions---------------------------------------------
 #define constrain(amt, low, high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
@@ -47,6 +48,7 @@
 extern encoder_position_t encoder_position;
 extern encoder_velocity_t encoder_velocity;
 extern encoder_count_t encoder_count;
+extern encoder_speed_t encoder_speed;
 
 rcl_publisher_t publisher; // Publisher to publish odometry message from encoder
 rcl_publisher_t publisher_twist; // Publisher to publish twist message
