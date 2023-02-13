@@ -77,4 +77,4 @@ struct normalized_data{
 unsigned long last_update = 0;
 
 // define function prototypes with pointer arguments
-void InitImu()
+void SetupImu();

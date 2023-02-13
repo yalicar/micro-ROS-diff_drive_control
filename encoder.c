@@ -128,7 +128,7 @@ void encoder_direction_()
 void encoder_speed_()
 {
     // left encoder speed calculation (rpm)
-    encoder_speed.left = (encoder_count.left * encoder_direction.right * 60*1000 )/ (encoder_setup.PULSES_PER_REV * encoder_setup.FRAME_TIME_MS);
+    encoder_speed.left = (encoder_count.left * encoder_direction.right * 60 *1000 )/ (encoder_setup.PULSES_PER_REV * encoder_setup.FRAME_TIME_MS);
     // right encoder speed calculation (rpm)
     encoder_speed.right = (encoder_count.right * encoder_direction.right * 60*1000) / (encoder_setup.PULSES_PER_REV  * encoder_setup.FRAME_TIME_MS);
 }
