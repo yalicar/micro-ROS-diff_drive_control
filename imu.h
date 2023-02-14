@@ -33,24 +33,28 @@
 #define PI 3.14159265358979323846
 
 // struct for setup imu
-struct imu_setup_t {
-    
-} imu_setup;
+typedef struct {
+    int SDA;
+    int SCL;
+    //int GYRO_FULL_SCALE;
+    //int ACCEL_FULL_SCALE;
+} imu_setup_t;
+// struct for storing gyro data raw
+typedef struct {
+    int16_t x;
+    int16_t y;
+    int16_t z;
+} gyro_raw_t;
 
-// struct for storing gyroscope data raw
-struct gyroscope_raw {
-    int16_t x;
-    int16_t y;
-    int16_t z;
-} gyroscope;
 // struct for storing accelerometer data raw
-struct accelerometer_raw {
+typedef struct {
     int16_t x;
     int16_t y;
     int16_t z;
-} accelerometer;
-// struct for storing magnetometer data raw
-struct magnetometer_raw {
+} accel_raw_t;
+
+// struct for storing magnetometer data raw with anidated struct
+typedef struct {
     int16_t x;
     int16_t y;
     int16_t z;
@@ -59,22 +63,29 @@ struct magnetometer_raw {
         int8_t y;
         int8_t z;
     } adjustment;
-} magnetometer;
+} mag_raw_t;
+
 // struct for storing temperature data raw
-struct temperature_raw {
+typedef struct {
     int16_t value;
-} temperature;
+} temp_raw_t;
+
 // struct for storing normalized data
-struct normalized_data{
+typedef struct{
     struct {
         float x;
         float y;
         float z;
     } accelerometer, gyroscope, magnetometer;
     float temperature;
-} normalized;
+} normalized_data_t;
 
-unsigned long last_update = 0;
+//unsigned long last_update = 0;
 
 // define function prototypes with pointer arguments
-void SetupImu();
+void InitImu(imu_setup_t imu_setup);
+void read_imu_raw();
+void read_magnetometer_raw();
+void adjust_magnetometer();
+void normalize();
+void GetImu();

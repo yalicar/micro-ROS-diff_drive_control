@@ -1,12 +1,55 @@
 #include "imu.h"
 
-void SetupImu() {
+// Global variables struct for imu initialization
+gyro_raw_t gyroscope = {
+    .x = 0,
+    .y = 0,
+    .z = 0
+};
+accel_raw_t accelerometer = {
+    .x = 0,
+    .y = 0,
+    .z = 0
+};
+mag_raw_t magnetometer = {
+    .x = 0,
+    .y = 0,
+    .z = 0,
+    .adjustment = {
+        .x = 0,
+        .y = 0,
+        .z = 0
+    }
+};
+temp_raw_t temperature = {
+    .value = 0
+};
+normalized_data_t normalized = {
+    .accelerometer = {
+        .x = 0,
+        .y = 0,
+        .z = 0
+    },
+    .gyroscope = {
+        .x = 0,
+        .y = 0,
+        .z = 0
+    },
+    .magnetometer = {
+        .x = 0,
+        .y = 0,
+        .z = 0
+    },
+    .temperature = 0
+};
+
+void InitImu(imu_setup_t imu_setup) {
     // setup i2c
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER; 
-    conf.sda_io_num = GPIO_NUM_21;  
+    conf.sda_io_num = imu_setup.SDA; 
     conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_io_num = GPIO_NUM_22; 
+    conf.scl_io_num = imu_setup.SCL;
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
     conf.master.clk_speed = 100000;
     i2c_param_config(I2C_NUM_0, &conf);
@@ -173,4 +216,11 @@ void normalize() {
     // normalize temperature data to degrees celsius
     normalized.temperature = (temperature.value / 333.87) + 21.0;
 }
+
+void GetImu()
+{
+    normalize();
+
+}
+
 

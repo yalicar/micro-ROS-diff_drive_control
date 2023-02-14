@@ -7,8 +7,7 @@
 #include "ros.h"
 #include "motor_driver.h"
 #include "encoder.h"
-//#include "encoder.h"
-//#include "imu.c"
+#include "imu.h"
 
 // Global variables
 motor_setup_t motor_setup = {
@@ -39,6 +38,17 @@ encoder_setup_t encoder_setup = {
     .WHEEL_BASE = 0.25 // wheel base (m)
 };
 
+imu_setup_t imu_setup = {
+    .SDA = 21,
+    .SCL = 22,
+    //.gyro_scale = GYRO_FULL_SCALE_2000_DPS,
+    //.accel_scale = ACCEL_FULL_SCALE_16_G,
+    //.mag_scale = 0x00,
+    //.mag_mode = 0x02,
+    //.mag_sample_rate = 0x06,
+    //.mag_adjustment = {0, 0, 0}
+};
+
 //----------------------------------------------Function declarations------------------------------------------------
 // Main
 void appMain(void *arg) {
@@ -46,6 +56,8 @@ void appMain(void *arg) {
     InitMotorDriver(motor_setup);
     // Initialize encoder
     InitEncoder(encoder_setup);
+    // Initialize IMU
+    InitImu(imu_setup);
     // Setup ROS
     setupRos(); // Setup ROS
 }

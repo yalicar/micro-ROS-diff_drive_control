@@ -5,6 +5,7 @@
 
 #include "motor_driver.h"
 #include "encoder.h"
+#include "imu.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -50,6 +51,8 @@ extern encoder_velocity_t encoder_velocity;
 extern encoder_count_t encoder_count;
 extern encoder_speed_t encoder_speed;
 
+extern normalized_data_t normalized;
+
 rcl_publisher_t publisher; // Publisher to publish odometry message from encoder
 rcl_publisher_t publisher_twist; // Publisher to publish twist message
 rcl_publisher_t publisher_imu; // Publisher to publish imu message
@@ -65,5 +68,6 @@ void setupRos(); // Setup ROS
 void cmd_vel_callback(const void *msgin); // Callback function for subscriber cmd_vel topic 
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time); // Callback function for timer
 void PublishWheelOdom(); // Publish odometry message from encoder
-
+void publish_imu_raw(); // Publish imu data
+void publish_mag_raw(); // Publish magnetometer data
 

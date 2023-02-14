@@ -1,6 +1,7 @@
 #include "ros.h"
 #include "motor_driver.h"
 #include "encoder.h"
+#include "imu.h"
 
 // Author: Yalmar Cardenas
 // Date: 2022-12-15
@@ -23,6 +24,9 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     // Function to set motor speed and direction
     SetMotorSpeed(linear, angular);
     PublishWheelOdom();
+    GetImu();
+    publish_imu_raw();
+    publish_mag_raw();
     
     }
 
@@ -51,7 +55,6 @@ void setupRos() {
         ROSIDL_GET_MSG_TYPE_SUPPORT(nav_msgs, msg, Odometry),
         "/wheel/odometry"));
 
-    /*
     // create publisher to publish imu data
     RCCHECK(rclc_publisher_init_default(
         &publisher_imu,
@@ -64,7 +67,6 @@ void setupRos() {
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, MagneticField),
         "/imu/mag"));
-    */
 
     // create timer,
     rcl_timer_t timer;
@@ -88,11 +90,9 @@ void setupRos() {
     // free resources
     RCCHECK(rcl_subscription_fini(&subscriber, &node));
     RCCHECK(rcl_publisher_fini(&publisher, &node))
-    /*
     RCCHECK(rcl_publisher_fini(&publisher_imu, &node))
     RCCHECK(rcl_publisher_fini(&publisher_mag, &node))
     RCCHECK(rcl_node_fini(&node));
-    */
 
     vTaskDelete(NULL);
 }
@@ -127,7 +127,6 @@ void PublishWheelOdom()
     GetEncoder();
 }
 
-/*
 // Publish mpu data raw to ROS
 void publish_imu_raw()
 {
@@ -160,4 +159,5 @@ void publish_mag_raw()
     // publish mag message
     RCSOFTCHECK(rcl_publish(&publisher_mag, (const void*)&mag_msg, NULL));
 }
-*/
+
+
